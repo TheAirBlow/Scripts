@@ -58,7 +58,7 @@ def check(filename):
     path = Path(filename)
     if path.suffix not in [ '.mp4', '.mkv' ]:
         return
-    out = f'{path.stem}.webp'
+    out = f'{path.stem}.gif'
     if os.path.isfile(out):
         return
     loop(filename, out)
