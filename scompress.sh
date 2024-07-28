@@ -26,5 +26,5 @@ for file in $(find . -type f -name "*.mp4" -or -name '*.mov' -or -name '*.wmv');
   echo Compressing $file...
   ffmpeg -i "$file" -vf scale=-2:2400,scale=1080:-2 -crf 18 -c:v libx265 -an "${file}_tmp.mp4"
   rm "$file"
-  mv "${file}_tmp.mp4" "$file"
+  mv "${file}_tmp.mp4" "${file%.*}.mp4"
 done
