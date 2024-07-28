@@ -1,5 +1,5 @@
 # Scripts
-A collection of useful bash scripts.
+A collection of useful scripts
 
 ## Usage
 - `apply.sh` - pulls changes from git and links all scripts to `~/.local/bin/`
