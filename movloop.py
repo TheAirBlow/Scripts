@@ -56,7 +56,7 @@ def loop(path, out):
 
 def check(filename):
     path = Path(filename)
-    if path.suffix not in [ '.mp4', '.mkv' ]:
+    if path.suffix not in [ '.mp4', '.mkv', '.wmv' ]:
         return
     out = f'{path.stem}.webp'
     if os.path.isfile(out):
