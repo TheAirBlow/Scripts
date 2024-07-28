@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cmd="maim -l -b 4 -c 0.259,0.761,0.961,0.4"
+cmd="maim -u -l -b 4 -c 0.259,0.761,0.961,0.4"
 end="| xclip -selection clipboard -t image/png"
 
 if [ "$1" = "none" ]; then
