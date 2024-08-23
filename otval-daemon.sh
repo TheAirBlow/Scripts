@@ -6,6 +6,7 @@ term() {
 
 trap term INT
 
+echo "otval daemon (real)"
 state="normal"
 while true; do
     fping -c1 -t5000 1.1.1.1 &> /dev/null
