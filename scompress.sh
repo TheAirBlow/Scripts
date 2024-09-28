@@ -18,7 +18,8 @@ done
 for file in $(find . -type f -name "*.gif"); do
   new=${file%.*}.webp
   echo "$file -> $new"
-  gif2webp "$file" -o "$new"
+  #gif2webp "$file" -o "$new"
+  magick "$file" -resize 2400x1080\> -delay 4 "$new"
   rm "$file"
 done
 

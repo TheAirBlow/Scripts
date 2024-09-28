@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 from concurrent.futures import ThreadPoolExecutor
+from PIL import Image
+import imagehash
 import hashlib
 import signal
 import sys
@@ -8,6 +10,7 @@ import os
 def term(signum, frame):
     print("Exiting...")
     sys.exit(-1)
+signal.signal(signal.SIGINT, term)
 
 def hash_file(file_path):
     hasher = hashlib.sha256()
@@ -16,12 +19,25 @@ def hash_file(file_path):
             hasher.update(block)
     return hasher.hexdigest()
 
+def hash_image(file_path):
+    try:
+        with Image.open(file_path) as img:
+            return "img_" + str(imagehash.phash(img, hash_size=32))
+    except Exception as e:
+        print(f"Error processing image {file_path}: {e}")
+        return None
+
 hashes = list()
 deleted = 0
 unique = 0
+
 def check_file(file_path):
     global hashes, deleted, unique
-    file_hash = hash_file(file_path)
+    file_hash = None
+    if file_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.webp')):
+        file_hash = hash_image(file_path)
+    else:
+        file_hash = hash_file(file_path)
     if file_hash in hashes:
         print("[-]", file_path)
         os.remove(file_path)
@@ -31,7 +47,6 @@ def check_file(file_path):
         hashes.append(file_hash)
         unique += 1
 
-signal.signal(signal.SIGINT, term)
 with ThreadPoolExecutor(max_workers = 8) as executor:
     print("This will recursively DELETE duplicate files.")
     choice = input("Do you want to continue? [y/N] ").strip().lower()
@@ -39,11 +54,11 @@ with ThreadPoolExecutor(max_workers = 8) as executor:
         print("Cancelled by user")
         sys.exit(-1)
 
-    hashes = list()
     for root, dirs, files in os.walk('.'):
         for name in files:
             file_path = os.path.join(root, name)
             executor.submit(check_file, file_path)
 
     executor.shutdown(wait=True)
+
 print(f"{deleted} duplicates of {unique} unique files deleted")
