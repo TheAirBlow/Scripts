@@ -60,6 +60,8 @@ if len(push) > 0:
     print("Pushing", len(push), "files...")
     progress = tqdm(unit="B", unit_scale=True, position=1, leave=False)
     for lpath, rpath in tqdm(push, desc="Transferring files", unit="file", position=0, leave=False):
+        if not lpath.exists():
+            continue
         with lpath.open("rb") as f:
             progress.reset(lpath.stat().st_size)
             progress.set_description(f"{shorten(lpath.name):<18}")
