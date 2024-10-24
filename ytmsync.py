@@ -66,23 +66,6 @@ def add_metadata(video_path, thumb_path, title, author):
         video['covr'] = [MP4Cover(img_byte_arr, imageformat=MP4Cover.FORMAT_JPEG)]
         video.save()
 
-def generate_playlist(title, entries):
-    global args
-    playlist = None
-    with open(f'{args.output}/{title}.m3u8', 'w', 1) as f:
-        f.write("#EXTM3U\n")
-        for entry in playlist:
-            title = entry.get('title', 'Unknown Title')
-            author = entry.get('uploader', 'Unknown Author')
-            id = entry['id']
-            found = False
-            for filename in songs:
-                if filename.startswith(id) and filename.endswith(".mp3"):
-                    set_metadata(filename, title, author, id)
-                    f.write(f"{filename}\n")
-                    found = True
-            print(f"[{('+' if found else '-')}] {author} - {title}")
-
 os.makedirs(args.output, exist_ok=True)
 
 ydl_opts = {
@@ -145,7 +128,7 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 
     playlist = None
     if args.playlist:
-        playlist = open(f'{args.output}/{title}.vlc', 'w')
+        playlist = open(f'{args.output}/{title}.m3u8', 'w')
         playlist.write("#EXTM3U\n")
 
     done = 1
