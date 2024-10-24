@@ -140,30 +140,35 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     print(f"[ytmsync] Fetching playlist contents")
     info = ydl.extract_info(args.url, download=False)
     title = info.get('title', 'Unknown Title')
-    print(f"[ytmsync] Found {len(info['entries'])} songs in {title}")
+    entries = info['entries']
+    print(f"[ytmsync] Found {len(entries)} songs in {title}")
 
     playlist = None
     if args.playlist:
         playlist = open(f'{args.output}/{title}.vlc', 'w')
         playlist.write("#EXTM3U\n")
 
-    for entry in info['entries']:
+    done = 1
+    for entry in entries:
         video_id = entry['id']
         video_url = entry['url']
         video_title = entry.get('title', 'Unknown Title')
         video_author = entry.get('uploader', 'Unknown Author')
         if "Private video" in video_title:
-            print(f"[ytmsync] Skipping {video_id} as it has been privated")
+            print(f"[ytmsync] Skipping {video_id} as it has been privated ({done}/{len(entries)})")
+            done += 1
             continue
+
         video_path = Path(args.output) / f'{video_id}.{ext}'
         if args.metadata:
             playlist.write(f"{video_path.name}\n")
 
         if video_path.exists():
-            print(f"[ytmsync] Skipping {video_id} ({video_author} - {video_title})")
+            print(f"[ytmsync] Skipping {video_id} ({video_author} - {video_title}, {done}/{len(entries)})")
+            done += 1
             continue
 
-        print(f"[ytmsync] Downloading {video_id} ({video_author} - {video_title})")
+        print(f"[ytmsync] Downloading {video_id} ({video_author} - {video_title}, {done}/{len(entries)})")
         ydl.download([video_url])
 
         if not video_path.exists():
@@ -182,6 +187,8 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
 
             add_metadata(video_path, thumb_path, video_title, video_author)
             thumb_path.unlink()
+
+        done += 1
 
     if args.playlist:
         playlist.close()
