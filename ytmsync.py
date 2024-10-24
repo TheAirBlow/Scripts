@@ -24,27 +24,27 @@ parser.add_argument("-v", "--video", help="Download video instead of audio", act
 args = parser.parse_args()
 
 def add_metadata(video_path, thumb_path, title, author):
-    # uncomment this if you want to add blank space instead of cropping
-    # with Image.open(thumb_path) as img:
-    #     max_dim = max(img.size)
-    #     new_img = Image.new("RGB", (max_dim, max_dim), (0, 0, 0))
-    #     y_offset = (max_dim - img.height) // 2
-    #     new_img.paste(img, (0, y_offset))
-    #     img_byte_arr = io.BytesIO()
-    #     new_img.save(img_byte_arr, format='JPEG')
-    #     img_byte_arr = img_byte_arr.getvalue()
-
     with Image.open(thumb_path) as img:
-        width, height = img.size
-        min_dimension = min(width, height)
-        left = (width - min_dimension) / 2
-        top = (height - min_dimension) / 2
-        right = (width + min_dimension) / 2
-        bottom = (height + min_dimension) / 2
-        cropped_img = img.crop((left, top, right, bottom))
+        max_dim = max(img.size)
+        new_img = Image.new("RGB", (max_dim, max_dim), (0, 0, 0))
+        y_offset = (max_dim - img.height) // 2
+        new_img.paste(img, (0, y_offset))
         img_byte_arr = io.BytesIO()
-        cropped_img.save(img_byte_arr, format='JPEG')
+        new_img.save(img_byte_arr, format='JPEG')
         img_byte_arr = img_byte_arr.getvalue()
+
+    # uncomment if you want to crop instead
+    # with Image.open(thumb_path) as img:
+    #     width, height = img.size
+    #     min_dimension = min(width, height)
+    #     left = (width - min_dimension) / 2
+    #     top = (height - min_dimension) / 2
+    #     right = (width + min_dimension) / 2
+    #     bottom = (height + min_dimension) / 2
+    #     cropped_img = img.crop((left, top, right, bottom))
+    #     img_byte_arr = io.BytesIO()
+    #     cropped_img.save(img_byte_arr, format='JPEG')
+    #     img_byte_arr = img_byte_arr.getvalue()
 
     if video_path.suffix == ".mp3":
         audio = MP3(video_path, ID3=ID3)
@@ -93,7 +93,7 @@ if args.video:
     ydl_opts.update({
         'format': 'bestvideo+bestaudio/best',
         'outtmpl': {
-            'default': f'{args.output}/%(id)s.mp4',
+            'default': f'{args.output}/%(id)s.%(ext)s',
             'thumbnail': f'{args.output}/%(id)s.%(ext)s'
         },
         'postprocessors': [{
@@ -106,7 +106,7 @@ else:
     ydl_opts.update({
         'format': 'bestaudio/best',
         'outtmpl': {
-            'default': f'{args.output}/%(id)s.mp3',
+            'default': f'{args.output}/%(id)s.%(ext)s',
             'thumbnail': f'{args.output}/%(id)s.%(ext)s'
         },
         'postprocessors': [{
