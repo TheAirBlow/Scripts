@@ -5,7 +5,6 @@ from pathlib import Path
 import numpy as np
 import subprocess
 import datetime
-import math
 import cv2
 import os
 
@@ -40,12 +39,12 @@ def loop(path, out):
             first_gray = cv2.cvtColor(first, cv2.COLOR_BGR2GRAY)
             frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             score, _ = ssim(first_gray, frame_gray, full=True)
-            if best == None or score > best[1]:
+            if not best or score > best[1]:
                 best = (frames, score)
         frames += 1
 
     process.terminate()
-    if best == None:
+    if not best:
         print(f'[{path}] no best frame somehow')
         return
     end = datetime.timedelta(seconds=best[0] / fps)

@@ -7,9 +7,6 @@ from pathlib import Path
 from PIL import Image
 import argparse
 import yt_dlp
-import json
-import tqdm
-import sys
 import os
 import io
 
@@ -59,7 +56,7 @@ def add_metadata(video_path, thumb_path, title, author):
         )
 
         audio.save()
-    else:
+    elif video_path.suffix == ".mp4":
         video = MP4(video_path)
         video['\xa9nam'] = title
         video['\xa9ART'] = author
@@ -71,6 +68,7 @@ os.makedirs(args.output, exist_ok=True)
 ydl_opts = {
     'extractor_args': {
         'youtube': {
+            'player_client': ['mweb'],
             'lang': ['en']
         }
     },

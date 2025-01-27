@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 from tqdm.utils import CallbackIOWrapper
-from typing import BinaryIO
 from pathlib import Path
 from adbutils import adb
 from tqdm import tqdm
-import subprocess
 import argparse
-import os
 
 def shorten(name):
     if len(name) < 18:
