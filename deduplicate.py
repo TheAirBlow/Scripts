@@ -25,7 +25,7 @@ def hash_image(file_path):
             return "img_" + str(imagehash.phash(img, hash_size=32))
     except Exception as e:
         print(f"Error processing image {file_path}: {e}")
-        return None
+        return hash_file(file_path)
 
 hashes = list()
 deleted = 0

@@ -68,7 +68,8 @@ os.makedirs(args.output, exist_ok=True)
 ydl_opts = {
     'extractor_args': {
         'youtube': {
-            'player_client': ['mweb'],
+            'player_client': ['web'],
+            'po_token': ['web_music.gvs+MlvqPCdueogkg-oEPzMcTo_ovVZIxzZMATj3lLfYg8U8sUcbJwXLI6ZW8O4jhAn14QAmJBYtKfXe1QRg9vXuTheHwP1ckwvEQ8h0-Vj1e4M7HPTqkux0VehBly_Q'],
             'lang': ['en']
         }
     },
