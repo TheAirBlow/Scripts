@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # 1. fixes broken unicode filenames and directory names e.g. mojibale from incorrectly extracted archives
 # 2. fixes uppercase extensions and forces them to lowercase to make sure everything works correctly with e.g. scompress
 # 3. renames .jpe and .jfif to .jpeg for better compatibility
