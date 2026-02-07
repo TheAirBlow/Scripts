@@ -9,11 +9,11 @@ parser.add_argument("-e", "--exclude", nargs="+", help="Folder names to exclude"
 
 args = parser.parse_args()
 
-ignore_list = {'.git', '__pycache__', '.DS_Store', 'venv', '.env'}
+ignore_list = {'.git', '__pycache__', '.DS_Store', 'venv', '.venv', '.env', '.idea', 'LICENCE'}
 if args.exclude:
     ignore_list.update(args.exclude)
 
-for path_str in paths:
+for path_str in args.paths:
     root_path = Path(path_str)
 
     if not root_path.exists():
