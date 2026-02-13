@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+from yt_dlp.utils import DownloadError
 from mutagen.id3 import ID3, TIT2, TPE1, APIC
 from mutagen.mp4 import MP4, MP4Cover
 from mutagen.mp3 import MP3
@@ -117,6 +117,9 @@ else:
         }]
     })
 
+RED = "\033[91m"
+RESET = "\033[0m"
+
 ext = "mp4" if args.video else "mp3"
 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
     print(f"[ytmsync] Fetching playlist contents")
@@ -151,7 +154,12 @@ with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             continue
 
         print(f"[ytmsync] Downloading {video_id} ({video_author} - {video_title}, {done}/{len(entries)})")
-        ydl.download([video_url])
+        try:
+            ydl.download([video_url])
+        except DownloadError as e:
+            print(f"{RED}[ytmsync] Failed to download {video_id}{RESET}")
+            done += 1
+            continue
 
         if not video_path.exists():
             print("[ytmsync] Failed to download the video, exiting...")
